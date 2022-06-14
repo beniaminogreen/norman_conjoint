@@ -1,0 +1,26 @@
+---
+title: "Lab Notebook"
+author: "Beniamino Green"
+output: pdf_document
+link-citations: yes
+bibliography: bib.bib
+---
+
+# Notes 25/05/22 and Before
+
+## Cleaned Data
+
+Created `/r_code/clean.R` to clean and save raw data from the survey to to
+cleaned files. Wrote in unit tests to ensure no observations are dropped, and
+that columns are correct.
+
+I created two datasets, `data/full_ratio.parquet` and `data/full_conjoint.parquet` that
+contain all the information on the ratio-level questions (where the answer is
+1-6), and the conjoint questions (where the answer is which unit a respondent
+prefers). The ratio dataset has twice the number of rows that the conjoint
+question has.
+
+## Created Hierarchical Models from @Jensen_2021
+
+# References
+
