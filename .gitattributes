@@ -1,0 +1,4 @@
+*.standraws filter=lfs diff=lfs merge=lfs -text
+stan_draws/* filter=lfs diff=lfs merge=lfs -text
+stan_draws/** filter=lfs diff=lfs merge=lfs -text
+data/stan_draws/** filter=lfs diff=lfs merge=lfs -text
