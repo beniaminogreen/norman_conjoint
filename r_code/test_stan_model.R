@@ -59,17 +59,29 @@ standata <- list(
                  )
 
 model_1 <- cmdstan_model("../stan_code/two_level_lm.stan")
-fit_1 <- model_1$sample(data=standata, chains=6, parallel_chains=6, iter_sampling=1000)
-
-summary(fit_1$draws("Gamma"))
+fit_1 <- model_1$sample(data=standata, chains=6, parallel_chains=6, iter_sampling=500, iter_warmup=500)
 
 tol = .1
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[1,1]")) + 2) < tol)
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[3,2]")) - 4) < tol)
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[3,3]")) - 5) < tol)
 
+# fit_1$save_object("test.Rds")
+# # summary(fit_1$draws("Gamma"))
+# # test <- summary(fit_1$draws("Beta"))
+# # test <- test  %>%
+# #     mutate(
+# #            x = as.numeric(gsub(".*\\[(\\d*),.*", "\\1", variable)),
+# #            y = as.numeric(gsub(".*\\[\\d*,(\\d*)\\]", "\\1", variable))
+# #     )
 
-
+# # beta_mat <- matrix(0, nrow=n_id, ncol=ncol(X)+1)
+# # for (i in 1:nrow(test)) {
+# #     x <- as.numeric(test[i, "x"])
+# #     y <- as.numeric(test[i, "y"])
+# #     beta_mat[x,y] <- as.numeric(test[i, "mean"])
+# # }
+# # beta_mat
 
 
 

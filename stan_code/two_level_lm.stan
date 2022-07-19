@@ -25,8 +25,8 @@ transformed parameters{
 }
 model {
 
-  tau ~ cauchy(0,2);
-  sigma ~ cauchy(0,2);
+  tau ~ normal(0,2);
+  sigma ~ normal(0,2);
 
   // Priors on Gammas for intercept
   for (i in 1:k){

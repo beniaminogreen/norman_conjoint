@@ -1,26 +1,548 @@
 ---
 title: "Lab Notebook"
 author: "Beniamino Green"
-output: pdf_document
+output:
+  pdf_document:
+    extra_dependencies: ["float"]
 link-citations: yes
 bibliography: bib.bib
 ---
 
-# Notes 25/05/22 and Before
+```{r, echo=F, include=F}
+library(tidyverse)
+library(stargazer)
+library(dotwhisker)
+library(arrow)
+library(corrplot)
+load("data/models.Rda")
+data <- read_parquet("data/cleaned_data.parquet")
+```
 
-## Cleaned Data
+# Experiment Summary:
 
-Created `/r_code/clean.R` to clean and save raw data from the survey to to
-cleaned files. Wrote in unit tests to ensure no observations are dropped, and
-that columns are correct.
+This notebook contains data analysis performed on the "social polarization"
+conjoint experiment. As a refresher, respondents were shown two profiles, which
+had the following attributes:
 
-I created two datasets, `data/full_ratio.parquet` and `data/full_conjoint.parquet` that
-contain all the information on the ratio-level questions (where the answer is
-1-6), and the conjoint questions (where the answer is which unit a respondent
-prefers). The ratio dataset has twice the number of rows that the conjoint
-question has.
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        Person A & Person B \\
+        \hline
+        Party & Party \\
+        Ideology & Ideology \\
+        Race / Ethnicity & Race / Ethnicity \\
+        Regional Background & Regional Background   \\
+        Education & Education \\
+        Income & Income \\
+        Gender & Gender \\
+        Religion & Religion \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Where each attribute was randomized and could take one take on one the
+following values:
+
+* Party: A number, 1-3 (1=Democratic, 2=Independent, 3=Republican)
+* Ideology: A number, 1-3 (1=Liberal, 2=Moderate, 3=Conservative)
+* Race/Ethnicity: either White, Black, Hispanic, or Asian.
+* Regional Background: Northeast,Midwest, South, or West
+* Education: One of HS grad, 2-year college, 4-year college, or Post-grad. Coded as a numeric vector 0-3, where 0 is HS grad, and $ is post-grad.
+* Income: A number, 1-4 (Under $40K=0, $40-80K=2, $80-120K=3, Over $120K=4)
+* Gender: Male (0) or Female (1)
+* Religion: Christian, Jewish, Muslim, or Atheist
+
+Respondents were then asked:
+
+\begin{quote}
+    On a scale or 1 (lowest) to 7 (highest), how favorably do you view each of the
+    individuals profiled?
+
+    Indicate which individual (A or B) you would prefer in each of the following scenarios:
+    \begin{itemize}
+        \item Having as a friend
+        \item Having as a neighbor
+        \item Having as a son/daughter-in-law
+    \end{itemize}
+\end{quote}
+
+The first question (On a scale of 1 to 7 \dots) yields a ratio-level measure of
+favorability, which will be referred to in this document as the ratio-measure.
+The other two questions forced respondents to pick one of the two profiles that
+they would prefer to have as a certain kind of acquaintance, yielding
+binary-choice data.
+
+# Exploratory Data Analysis:
+
+In this section, I perform some exploratory data analysis to better understand
+the data.
+
+## How Similar Are Answers to the Three Conjoint Questions?
+
+First, I want to understand to what degree are the answers to the three
+conjoint questions correlated, and do the questions tap into different
+underlying dimensions?  One hypothesis might be that respondents are answering
+each of the three questions identically, based on which person they like the
+most in a general sense.
+
+To understand this, I first create a correlation plot showing correlations
+between answers to the three questions, which can be seen below:
+
+```{r, echo=F}
+conjoint_outcomes <- data %>%
+    select(starts_with("Q2"))
+
+# conjoint_outcomes <- as.data.frame(conjoint_outcomes == 2)
+# names(conjoint_outcomes) <- c("Friend", "Neighbor", "S/DIL")
+
+# corrplot.mixed(cor(conjoint_outcomes))
+
+# glm(Friend ~ Neighbor, family=binomial(link="logit"), data=conjoint_outcomes)
+# glm(`S/DIL` ~ Neighbor, family=binomial(link="logit"), data=conjoint_outcomes)
+
+# n_true <- apply(conjoint_outcomes,1,sum)
+# mean(n_true==0 | n_true ==3)
+```
+
+The correlations range between .54 and .67 indicating relatively strong
+positive correlations between answers to the three questions.
+
+Another way to understand how closely related the three questions are is to
+look at the percentage of people that preferred one profile to another on all
+three conjoint questions - 67%. This suggests that the questions do measure
+similar concepts, but that they do not measure exactly the same thing, as
+respondents did not uniformly prefer one profile over another in 33% of
+conjoints.
+
+# Data Analysis
+
+In this section, I proceed to the substantive data analysis. I first regress
+the interval-level measure of likability on the attributes of the conjoint
+profile. As a note, the reference category for the region variable is
+"Northeast," the reference category for the religion variable is "Christian,"
+and the reference category for race is "White."  Party is measured on a 1-3
+scale, where 1 is a Democrat, 2 is an independent, and 3 is a Republican.
+
+The coefficients associated with a profile being female or black are positive
+and significant, with coefficient estimates of .09 each. This indicates that a
+profile who is female or black will receive a predicted rating .09 points
+higher than an identical profile who is not Black or not Female. As the
+attribute profiles have been randomized, these estimates are unbiased in
+expectation, and can be interpreted causally.
+
+The coefficients associated with being Muslim and Atheist are both significant
+and negative, indicating that relative to Christians, Muslims and Atheists are
+rated less-favorably by respondents.
+
+```{r, echo=F, results="asis"}
+
+stargazer(
+          ratio_model_1, header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+          dep.var.labels = "Favorability Rating (1-7)",
+          title = "Regression of Favorability on Profile Attributes",
+          table.placement="H"
+)
+```
+
+I display the coefficients and standard errors from this model in a coefficient
+plot, shown below. The plot contains no new information, but is easier to take
+in at-a-glance.
+
+```{r, echo=F}
+
+dwplot(ratio_model_1) +
+    ggtitle("Coefficient Plots For Model 1") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    )
+```
+
+## Analysis of Binary-Choice Data
+
+Secondly, I run regress the outcomes from the binary choice questions on
+conjoint profile characteristics. Coefficients in these regressions can be
+interpreted as average marginal component effects, or the difference in
+expected vote share^[taken over the joint distribution of candidate attributes]
+between two candidates that have a one-unit difference in the predictor of
+interest.
+
+As a note, the AMCE is not equal to the expected difference in vote shares in
+an "election" between the two candidates that differ by one unit on a
+predictor. Rather, it is equal to the difference in the average vote share each
+candidate would receive if they were to compete against all other candidates in
+the population.
+
+To give an example, the coefficient associated with a profile being black in
+the first regression model suggests that a black profile will receive on
+average 3.5% more votes than an otherwise-identical white profile, across all
+elections.
+
+
+```{r, echo=F, results="asis"}
+
+stargazer(
+          acme_model_1, acme_model_2, acme_model_3,
+          header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+      dep.var.labels = c("Friend","Neighbor", "S/DIL")
+)
+
+```
+
+I also present the point estimates and confidence intervals in a graphical
+form, as before. Again, the graph below contains no new information, but is
+slightly easier to read at-a-glance.
+
+```{r, echo=F}
+
+dwplot(
+          list("Friend Model"= acme_model_1,
+               "Neighbor Model" = acme_model_2,
+               "S/DIL Model" = acme_model_3)
+       ) +
+    ggtitle("Coefficient Plots For Model ACME models") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    ) +
+    scale_x_continuous(limits=c(-.2,.2))
+
+```
+
+# Split-Sample Estimates:
+
+In this section, I report the results of split-sample estimates of the effects
+of profile attributes on the 1-7 likability scale question. In each section, I
+repeat the same analyses as above on subgroups of the sample (Republicans,
+Democrats, etc).
+
+It is important to remember in reading the regression tables that The
+difference between a statistically significant and a statistically
+insignificant point estimate may not itself be statistically significant^[see [here](https://statmodeling.stat.columbia.edu/2005/06/14/the_difference/) for more].
+
+This is to say that if a coefficient is significant for one group but
+insignificant for another, this does not mean that the difference in the
+effects is significantly different between the two groups. To calculate the
+standard error associated with the difference in the two groups, we must use
+the following formula:
+
+$${S.E.}_\text{Difference} = \sqrt{{S.E.}_\text{Group 1}^2 + {S.E.}_\text{Group 2}^2}$$
+
+
+## Democrats VS Republicans:
+
+First, I regress likability measured on the 1-7 scale on the conjoint profile
+attributes among just Democratic-leaning respondents, and just
+Republican-leaning respondents.
+
+The coefficients for party and ideology are significantly different, and in the
+directions one would expect; Republican respondents like republican profiles
+more than democratic ones, while Democrats like republican profiles less than
+otherwise-identical democratic ones.
+
+The difference between the coefficient for a Black profile is positive for
+democrats and negative for republicans and the difference is statistically
+significant at the $p=.05$ level, suggesting that democrats view Black profiles
+more favorably than republican respondents.
+
+Finally, the difference between how Democrats and Republicans view Muslim and
+Atheist (although not Jewish) profiles are also statistically significant.
+Republicans view Jewish, Muslim and Atheist profiles significantly more
+negatively than otherwise-identical Christian profiles, and the differences
+between the estimates for Democrats and Republicans are statistically
+significant for the Muslim and Atheist profiles.
+
+```{r, echo=F, results="asis"}
+stargazer(
+          dem_ratio_model_1, indep_ratio_model_1, rep_ratio_model_1,
+          header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+          title = "Regression of Favorability on Profile Attributes",
+          dep.var.labels = "Favorability Rating (1-7)",
+          column.labels = c("Democrats", "Independents","Republicans"),
+          table.placement="H"
+)
+```
+
+```{r, echo=F}
+dwplot(
+          list(
+               "Democrats"= dem_ratio_model_1,
+               "Independents"= indep_ratio_model_1,
+               "Republicans" = rep_ratio_model_1)
+       ) +
+    ggtitle("Coefficient Estimates For Republicans / Democrats") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    )
+```
+
+## Men VS Women
+
+I repeat the same split-sample analysis for Men vs Women. The interpretations
+of the coefficients are the same as above.
+
+Men and Women appear to react to the partisanship of a profile in different
+ways; while both appear to react negatively to republican profiles on average,
+Women appear to react more negatively, and the difference is statistically
+significant.
+
+```{r, echo=F, results="asis"}
+stargazer(
+          male_ratio_model_1, female_ratio_model_1,
+          header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+          title = "Regression of Favorability on Profile Attributes",
+          dep.var.labels = "Favorability Rating (1-7)",
+          column.labels = c("Men", "Women"),
+          table.placement="H"
+)
+```
+
+```{r, echo=F}
+dwplot(
+          list("Men"= male_ratio_model_1,
+               "Women" = female_ratio_model_1)
+       ) +
+    ggtitle("Coefficient Estimates For Men / Women") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    )
+```
+
+## White VS Non-White Respondents
+
+Finally, I run the same regressions on white vs non-white respondents. The
+differences between the two groups are not statistically significant.
+
+```{r, echo=F, results="asis"}
+stargazer(
+          white_ratio_model_1, non_white_ratio_model_1,
+          header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+          title = "Regression of Favorability on Profile Attributes",
+          dep.var.labels = "Favorability Rating (1-7)",
+          column.labels = c("White Respondents", "Non-White Respondents"),
+          table.placement="H"
+)
+```
+
+```{r, echo=F}
+dwplot(
+          list("White Respondents"= white_ratio_model_1,
+               "Non-White Respondents" = non_white_ratio_model_1)
+       ) +
+    ggtitle("Coefficient Estimates for White / Non-White Respondents") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    )
+```
+
 
 ## Created Hierarchical Models from @Jensen_2021
+
+Finally, I have written hierarchical Bayesian models to understand
+heterogeneity in effects across the popultaion. I have coded and tested the
+models, but not yet applied them to the survey data.
+
+All the models take the same form as before, modelling responses as a linear
+combination of profile attributes. However, in these models, the effect of each
+profile attribute also modelled as a linear combination of the demographic
+characteristics of each respondent.
+
+Specifically, I model the rating that a profile, recieves, $Y$ from a person, $i$ as:
+
+$$Y = \beta_i^T X$$
+
+Where $\beta_i$ is a vector that describes the effect each attribute of a
+conjoint profile has on a specific respondent's rating. Each $\beta_{ij} \in
+\beta_i$ comes from a linear combitation of respondent attributes and
+population weights.
+
+$$\beta_{i} = \gamma^T Z_j$$
+
 
 # References
 

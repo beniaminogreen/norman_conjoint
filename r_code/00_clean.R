@@ -4,7 +4,6 @@ library(arrow)
 
 data <- read_sav("../data/uncleaned_data.sav")
 
-
      # _       _                        _                 _
   # __| | __ _| |_ __ _   _ __ ___  ___| |__   __ _ _ __ (_)_ __   __ _
  # / _` |/ _` | __/ _` | | '__/ _ \/ __| '_ \ / _` | '_ \| | '_ \ / _` |
@@ -13,7 +12,10 @@ data <- read_sav("../data/uncleaned_data.sav")
      #                                             |_|            |___/
 
 demographic <- data %>%
-    select(-starts_with("src"), -starts_with("Q"))
+    select(-starts_with("src"), -starts_with("Q")) %>%
+    mutate(
+           ideo5 = na_if(ideo5, 6)
+    )
 
 clean_col_names <- function(df, screen) {
     df %>%
@@ -42,9 +44,6 @@ stopifnot(
 stopifnot("All units did not contribute 4 times" =
           all(table(full_data$ID) == 4)
 )
-stopifnot("Missing data" =
-          nrow(na.omit(full_data)) == nrow(full_data)
-)
 
                  # _       _     _
 # __   ____ _ _ __(_) __ _| |__ | | ___
@@ -70,8 +69,16 @@ full_data <- full_data %>%
                                    attribut1_2 == 3 ~ 2,
                                    attribut1_2 == 1 ~ 1,
                                    ),
+           p1_rep = as.numeric(p1_party==3),
+           p2_rep = as.numeric(p2_party==3),
+           p1_dem = as.numeric(p1_party==1),
+           p2_dem = as.numeric(p2_party==1),
            p1_ideo = as.numeric(attribut2_1),
            p2_ideo = as.numeric(attribut2_2),
+           p1_liberal = as.numeric(attribut2_1==1),
+           p2_liberal = as.numeric(attribut2_2==1),
+           p1_conservative = as.numeric(attribut2_1==3),
+           p2_conservative = as.numeric(attribut2_2==3),
            p1_white = as.numeric(attribut3_1 == 1),
            p2_white = as.numeric(attribut3_2 == 1),
            p1_black = as.numeric(attribut3_1 == 2),
@@ -113,20 +120,72 @@ for (attribute in attribute_names) {
 
 person_1_data <- full_data %>%
     select(-starts_with("p2_")) %>%
-    rename_with(~gsub("p1_", "", .x))  %>%
-    rename(Q1 = Q1a_1)
+    rename_with(~gsub("p1_", "p_", .x))  %>%
+    rename(Q1 = Q1a_1) %>%
+    mutate(
+           Q2_1 = Q2_1 == 1,
+           Q2_2 = Q2_2 == 1,
+           Q2_3 = Q2_3 == 1,
+    )
 person_2_data <- full_data %>%
     select(-starts_with("p1_")) %>%
-    rename_with(~gsub("p2_", "", .x)) %>%
-    rename(Q1 = Q1b_1)
+    rename_with(~gsub("p2_", "p_", .x)) %>%
+    rename(Q1 = Q1b_1) %>%
+    mutate(
+           Q2_1 = Q2_1 == 2,
+           Q2_2 = Q2_2 == 2,
+           Q2_3 = Q2_3 == 2,
+    )
+
+stopifnot(
+          "Tricky operation succeded" =
+          all(person_2_data$Q2_1 == !person_1_data$Q2_1)
+          )
 
 full_ratio <- full_join(person_1_data, person_2_data) %>%
-    select(-starts_with("d_"))
+    select(-starts_with("d_"))  %>%
+    mutate(
+           p_scrambled = case_when(
+                                   p_rep & p_black ~ T,
+                                   p_hispanic & p_rep ~ T,
+                                   p_conservative & p_black ~ T,
+                                   p_hispanic & p_conservative ~ T,
+                                   p_christian & p_dem ~  T,
+                                   p_christian & p_liberal ~  T,
+                                   p_conservative & p_dem ~  T,
+                                   p_liberal & p_rep ~  T,
+                                   T ~ F
+                                   ),
+           Q1_std = Q1 / 6 - (1/6)
+           )
 
-full_conjoint <- full_data
-
-stopifnot(nrow(full_ratio) == nrow(full_conjoint)*2)
 stopifnot(all(table(full_ratio$ID)==8))
 
-write_parquet(full_ratio, "../data/full_ratio.parquet")
-write_parquet(full_conjoint, "../data/full_conjoint.parquet")
+write_parquet(full_ratio, "../data/cleaned_data.parquet")
+
+demographic_data <- full_ratio %>%
+    select(
+           ID, weight, starttime, endtime, age, gender, region, race, educ,
+           maritalstatus, starts_with("parenty"), starts_with("profile"), pid3,
+           ideo5, presvote20post
+    ) %>%
+    distinct_all() %>%
+    mutate(
+           d_dem = as.numeric(pid3==1),
+           d_rep = as.numeric(pid3==2),
+           d_party_other = as.numeric(pid3 %in% c(4,5)),
+           d_female = as.numeric(gender==2),
+           d_northeast = as.numeric(region == 1),
+           d_midwest = as.numeric(region == 2),
+           d_south = as.numeric(region == 3),
+           d_west = as.numeric(region == 4),
+           d_white = as.numeric(race==1),
+           d_black = as.numeric(race==2),
+           d_hispanic = as.numeric(race==3),
+           d_asian = as.numeric(race==4),
+           d_other = as.numeric(race %in% 5:8),
+           std_age = (age-mean(age))/sd(age),
+           d_liberal = as.numeric(ideo5 %in% c(1,2)),
+           d_conservative = as.numeric(ideo5 %in% c(4,5)),
+    )
+write_parquet(demographic_data, "../data/demographic_data.parquet")
