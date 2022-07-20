@@ -1,11 +1,11 @@
 #!/usr/bin/Rscript
 #SBATCH --job-name=mcmc_ratio_partisanship
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=4
+#SBATCH --nodes=1                    # Run all processes on a single node
+#SBATCH --ntasks=1                   # Run a single task
+#SBATCH --cpus-per-task=4            # Number of CPU cores per task
 #SBATCH --time=90-00:00:00
-#SBATCH --mem=12G
-#SBATCH --output=mcmc_%j.log     # Standard output and error log
-#SBATCH --array=1-4                 # Array range
+#SBATCH --mem=10G
+#SBATCH --output=logs/mcmc_%j.log     # Standard output and error log
 
 library(arrow)
 library(rstanarm)

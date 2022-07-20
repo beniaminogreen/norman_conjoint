@@ -187,5 +187,15 @@ demographic_data <- full_ratio %>%
            std_age = (age-mean(age))/sd(age),
            d_liberal = as.numeric(ideo5 %in% c(1,2)),
            d_conservative = as.numeric(ideo5 %in% c(4,5)),
+           d_scrambled = case_when(
+                                   d_liberal & d_rep ~ T,
+                                   d_conservative & d_dem ~ T,
+                                   d_conservative & d_liberal ~ T,
+                                   d_rep & d_black ~ T,
+                                   d_rep & d_hispanic ~ T,
+                                   d_conservative & d_black ~ T,
+                                   d_conservative & d_hispanic ~ T,
+                                   T ~ F
+                                   )
     )
 write_parquet(demographic_data, "../data/demographic_data.parquet")
