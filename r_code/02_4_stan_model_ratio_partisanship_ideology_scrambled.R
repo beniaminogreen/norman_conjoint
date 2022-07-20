@@ -24,7 +24,7 @@ adapt_delta = .99
 data <- read_parquet("../data/cleaned_data.parquet")
 demographic_data <- read_parquet("../data/demographic_data.parquet")
 
-X <- model.matrix(~p_rep + p_dem + p_liberal + p_conservative + p_black + p_hispanic + p_asian + p_midwest + p_south + p_west + p_education + p_inc + p_female + p_jewish + p_muslim + p_atheist, data=data)
+X <- model.matrix(~p_rep + p_dem + p_liberal + p_conservative + p_black + p_hispanic + p_asian + p_midwest + p_south + p_west + p_education + p_inc + p_female + p_jewish + p_muslim + p_atheist + p_scrambled, data=data)
 Z <- model.matrix(~ std_age + gender + educ + d_hispanic + d_midwest + d_south + d_west	+ d_black + d_asian + d_female + d_dem + d_rep + d_party_other + d_liberal + d_conservative  + d_scrambled, data=demographic_data)
 
 save(X,Z, file="../data/stan_draws/ratio_scrambled_partisanship_ideology_supp.Rda")
