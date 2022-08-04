@@ -1,0 +1,63 @@
+---
+title: "Bayesian Hierarical Model Tables"
+author: "Beniamino Green"
+output:
+    pdf_document:
+        extra_dependencies: ["float"]
+bibliography: "/home/beniamino/Documents/UCL/latexresources/uni.bib"
+link-citations: yes
+---
+
+```{r, echo=F, include=F}
+source("r_code/03_plot_stan_models.R")
+```
+
+# Regression Models Including Only Ideology
+
+```{r, echo=F,results = "asis"}
+load("data/stan_draws/ratio_ideology_supp.Rda")
+draws <-readRDS("data/stan_draws/ratio_ideology_draws.Rda")
+
+
+colnames(X) <- c("Intercept", "Liberal", "Conservative", "Black", "Hispanic", "Asian", "Midwest", "South", "West", "Education","Income", "Female" , "Jewish", "Muslim", "Atheist")
+colnames(Z) <- c("Intercept", "Standardized Age", "Gender", "Education", "Hispanic", "Midwest", "South","West", "Black","Asian", "Female", "Liberal", "Consertative")
+
+ben_stargazer(draws, X, Z)
+```
+
+# Coefficients from Models Including Only Partisanship
+```{r, echo=F, results="asis"}
+load("data/stan_draws/ratio_partisanship_supp.Rda")
+colnames(X) <- c("Intercept", "Republian", "Democratic", "Black", "Hispanic", "Asian", "Midwest", "South", "West", "Education","Income", "Female" , "Jewish", "Muslim", "Atheist")
+colnames(Z) <- c("Intercept", "Standardized Age", "Gender", "Education", "Hispanic", "Midwest", "South","West", "Black","Asian", "Female", "Democratic", "Republican", "Other Party")
+
+draws <-readRDS("data/stan_draws/ratio_partisanship_draws.Rda")
+
+ben_stargazer(draws, X,Z)
+```
+
+# Coefficients from Models Including Partisanship and Ideology
+
+```{r, echo=F, results="asis"}
+load("data/stan_draws/ratio_partisanship_ideology_supp.Rda")
+
+colnames(X) <- c("Intercept", "Republian", "Democratic","Liberal", "Conservative","Black", "Hispanic", "Asian", "Midwest", "South", "West", "Education","Income", "Female" , "Jewish", "Muslim", "Atheist")
+colnames(Z) <- c("Intercept", "Standardized Age", "Gender", "Education", "Hispanic", "Midwest", "South","West", "Black","Asian", "Female", "Democratic", "Republican", "Other Party", "Liberal", "Conservative")
+draws <-readRDS("data/stan_draws/ratio_partisanship_ideology_draws.Rda")
+
+ben_stargazer(draws, X,Z)
+```
+
+# Coefficients from Models Including Partisanship and Ideology and "Scrambled" Indicator
+
+```{r, echo=F, results="asis"}
+load("data/stan_draws/ratio_scrambled_partisanship_ideology_supp.Rda")
+colnames(X) <- c("Intercept", "Republian", "Democratic","Liberal", "Conservative","Black", "Hispanic", "Asian", "Midwest", "South", "West", "Education","Income", "Female" , "Jewish", "Muslim", "Atheist", "Scrambled")
+colnames(Z) <- c("Intercept", "Standardized Age", "Gender", "Education", "Hispanic", "Midwest", "South","West", "Black","Asian", "Female", "Democratic", "Republican", "Other Party", "Liberal", "Conservative", "Scrambled")
+draws <-readRDS("data/stan_draws/ratio_scrambled_partisanship_ideology_draws.Rda")
+
+ben_stargazer(draws, X,Z)
+```
+
+
+

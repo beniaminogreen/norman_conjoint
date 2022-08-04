@@ -62,6 +62,7 @@ model_1 <- cmdstan_model("../stan_code/two_level_lm.stan")
 fit_1 <- model_1$sample(data=standata, chains=6, parallel_chains=6, iter_sampling=500, iter_warmup=500)
 
 tol = .1
+print("Testing That population parameters have been recovered")
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[1,1]")) + 2) < tol)
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[3,2]")) - 4) < tol)
 stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[3,3]")) - 5) < tol)
@@ -82,8 +83,3 @@ stopifnot("Population Parameters Not Recovered" = abs(mean(fit_1$draws("Gamma[3,
 # #     beta_mat[x,y] <- as.numeric(test[i, "mean"])
 # # }
 # # beta_mat
-
-
-
-
-
