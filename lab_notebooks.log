@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2022.7.5)  13 JUL 2022 11:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2022.7.5)  5 AUG 2022 11:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -366,6 +366,9 @@ LaTeX Warning: Label `' multiply defined.
 
 LaTeX Warning: Label `' multiply defined.
 
+
+LaTeX Warning: Label `' multiply defined.
+
 )
 \openout1 = `lab_notebooks.aux'.
 
@@ -526,25 +529,25 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \vbox (72.50378pt too high) has occurred while \output is active []
+Overfull \vbox (108.50378pt too high) has occurred while \output is active []
 
 [3
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.289 
+l.292 
       ]
-<lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf, id=36, 463.7325pt x 31
-3.17pt>
+<lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf, id=36, 464.73625pt x 3
+13.17pt>
 File: lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf Graphic file (type
  pdf)
 <use lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf>
 Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf
-  used on input line 294.
-(pdftex.def)             Requested size: 463.73842pt x 313.174pt.
+  used on input line 297.
+(pdftex.def)             Requested size: 464.74928pt x 313.17877pt.
 
-LaTeX Warning: Float too large for page by 86.80946pt on input line 387.
+LaTeX Warning: Float too large for page by 86.80946pt on input line 390.
 
 <lab_notebooks_files/figure-latex/unnamed-chunk-6-1.pdf, id=38, 453.695pt x 313
 .17pt>
@@ -552,17 +555,17 @@ File: lab_notebooks_files/figure-latex/unnamed-chunk-6-1.pdf Graphic file (type
  pdf)
 <use lab_notebooks_files/figure-latex/unnamed-chunk-6-1.pdf>
 Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-6-1.pdf
-  used on input line 393.
+  used on input line 396.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
 [4 <./lab_notebooks_files/figure-latex/unnamed-chunk-4-1.pdf>] [5
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.396 ...stimates:}\label{split-sample-estimates}}
+l.399 ...stimates:}\label{split-sample-estimates}}
                                                   ] [6 <./lab_notebooks_files/f
 igure-latex/unnamed-chunk-6-1.pdf>]
-Overfull \hbox (3.03775pt too wide) in paragraph at lines 447--514
+Overfull \hbox (3.03775pt too wide) in paragraph at lines 450--517
  [][] 
  []
 
@@ -574,7 +577,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.515 
+l.518 
       ]
 <lab_notebooks_files/figure-latex/unnamed-chunk-8-1.pdf, id=97, 453.695pt x 313
 .17pt>
@@ -582,25 +585,30 @@ File: lab_notebooks_files/figure-latex/unnamed-chunk-8-1.pdf Graphic file (type
  pdf)
 <use lab_notebooks_files/figure-latex/unnamed-chunk-8-1.pdf>
 Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-8-1.pdf
-  used on input line 516.
+  used on input line 519.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
+
+Overfull \hbox (3.03775pt too wide) in paragraph at lines 526--596
+ [][] 
+ []
+
 [9 <./lab_notebooks_files/figure-latex/unnamed-chunk-8-1.pdf>]
-Overfull \vbox (100.75389pt too high) has occurred while \output is active []
+Overfull \vbox (136.75389pt too high) has occurred while \output is active []
 
 [10
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.600 
+l.597 
       ]
-<lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pdf, id=119, 453.695pt x 3
+<lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pdf, id=117, 453.695pt x 3
 13.17pt>
 File: lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pdf Graphic file (typ
 e pdf)
 <use lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pdf>
 Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pd
-f  used on input line 601.
+f  used on input line 598.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
 [11 <./lab_notebooks_files/figure-latex/unnamed-chunk-10-1.pdf>]
 Overfull \vbox (100.75389pt too high) has occurred while \output is active []
@@ -612,7 +620,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
                                                   \__shipout_drop_firstpage_...
 l.682 
       ]
-<lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pdf, id=141, 453.695pt x 3
+<lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pdf, id=139, 453.695pt x 3
 13.17pt>
 File: lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pdf Graphic file (typ
 e pdf)
@@ -620,17 +628,35 @@ e pdf)
 Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pd
 f  used on input line 683.
 (pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
-[13 <./lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pdf>] (./lab_noteboo
+[13 <./lab_notebooks_files/figure-latex/unnamed-chunk-12-1.pdf>]
+Overfull \vbox (100.75389pt too high) has occurred while \output is active []
+
+[14
+pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.764 
+      ]
+<lab_notebooks_files/figure-latex/unnamed-chunk-14-1.pdf, id=163, 453.695pt x 3
+13.17pt>
+File: lab_notebooks_files/figure-latex/unnamed-chunk-14-1.pdf Graphic file (typ
+e pdf)
+<use lab_notebooks_files/figure-latex/unnamed-chunk-14-1.pdf>
+Package pdftex.def Info: lab_notebooks_files/figure-latex/unnamed-chunk-14-1.pd
+f  used on input line 765.
+(pdftex.def)             Requested size: 453.6939pt x 313.16922pt.
+[15 <./lab_notebooks_files/figure-latex/unnamed-chunk-14-1.pdf>] (./lab_noteboo
 ks.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 13475 strings out of 478238
- 212905 string characters out of 5850457
- 554789 words of memory out of 5000000
- 31351 multiletter control sequences out of 15000+600000
+ 13485 strings out of 478238
+ 213333 string characters out of 5850457
+ 555790 words of memory out of 5000000
+ 31357 multiletter control sequences out of 15000+600000
  532293 words of font info for 120 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,10n,77p,1010b,353s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -648,10 +674,10 @@ t/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf-dist/fonts/type1/public/lm/l
 mr8.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/share/tex
 mf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf-dist/fonts/type1/pub
 lic/lm/lmsy7.pfb>
-Output written on lab_notebooks.pdf (13 pages, 277397 bytes).
+Output written on lab_notebooks.pdf (15 pages, 288691 bytes).
 PDF statistics:
- 281 PDF objects out of 1000 (max. 8388607)
- 219 compressed objects within 3 object streams
- 45 named destinations out of 1000 (max. 500000)
- 36978 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 301 PDF objects out of 1000 (max. 8388607)
+ 234 compressed objects within 3 object streams
+ 48 named destinations out of 1000 (max. 500000)
+ 36983 words of extra memory for PDF output out of 42996 (max. 10000000)
 

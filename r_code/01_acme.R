@@ -20,8 +20,20 @@ white_data <- data %>%
 non_white_data <- data %>%
     filter(race!=1)
 
+conservative_data <- data %>%
+    filter(ideo5 %in% c(4,5))
+liberal_data <- data %>%
+    filter(ideo5 %in% c(1,2))
+moderate_data <- data %>%
+    filter(ideo5 == 3)
+
 # Overall Sample Models
 ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
+              p_midwest + p_south + p_west + p_education + p_inc +
+              p_female + p_jewish + p_muslim + p_atheist
+          , data=data, weights=weight)
+
+ratio_model_2 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
               p_midwest + p_south + p_west + p_education + p_inc +
               p_female + p_jewish + p_muslim + p_atheist
           , data=data, weights=weight)
@@ -158,5 +170,18 @@ non_white_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian +
               p_midwest + p_south + p_west + p_education + p_inc +
               p_female + p_jewish + p_muslim + p_atheist
           , data=non_white_data, weights=weight)
+
+liberal_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
+              p_midwest + p_south + p_west + p_education + p_inc +
+              p_female + p_jewish + p_muslim + p_atheist
+          , data=liberal_data, weights=weight)
+conservative_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
+              p_midwest + p_south + p_west + p_education + p_inc +
+              p_female + p_jewish + p_muslim + p_atheist
+          , data=conservative_data, weights=weight)
+moderate_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
+              p_midwest + p_south + p_west + p_education + p_inc +
+              p_female + p_jewish + p_muslim + p_atheist
+          , data=moderate_data, weights=weight)
 
 save(list=ls(pattern="model"),file = "../data/models.Rda")

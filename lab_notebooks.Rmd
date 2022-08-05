@@ -139,11 +139,12 @@ rated less-favorably by respondents.
 ```{r, echo=F, results="asis"}
 
 stargazer(
-          ratio_model_1, header=F,
+          ratio_model_2, header=F,
           covariate.labels = c(
                                "Democrat",
                                "Republican",
-                               "Ideology",
+                               "Liberal",
+                               "Conservative",
                                "Race - Black",
                                "Race - Asian",
                                "Ethnicity - Hispanic",
@@ -170,7 +171,7 @@ in at-a-glance.
 
 ```{r, echo=F}
 
-dwplot(ratio_model_1) +
+dwplot(ratio_model_2) +
     ggtitle("Coefficient Plots For Model 1") +
     geom_vline(xintercept=0, linetype=2, alpha=.6) +
     xlab("Coefficient Estimate") +
@@ -179,7 +180,8 @@ dwplot(ratio_model_1) +
                      labels=rev(c(
                                "Democrat",
                                "Republican",
-                               "Ideology",
+                               "Liberal",
+                               "Conservative",
                                "Race - Black",
                                "Race - Asian",
                                "Ethnicity - Hispanic",
@@ -371,6 +373,71 @@ dwplot(
                                "Democrat",
                                "Republican",
                                "Ideology",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist"
+                              ))
+    )
+```
+
+ # Results by Ideology
+
+```{r, echo=F, results="asis"}
+stargazer(
+          liberal_ratio_model_1, moderate_ratio_model_1, conservative_ratio_model_1,
+          header=F,
+          covariate.labels = c(
+                               "Democrat",
+                               "Republican",
+                               "Liberal",
+                               "Conservative",
+                               "Race - Black",
+                               "Race - Asian",
+                               "Ethnicity - Hispanic",
+                               "Region - Midwest",
+                               "Region - South",
+                               "Region - West",
+                               "Education",
+                               "Income",
+                               "Female",
+                               "Religion - Jewish",
+                               "Religion - Muslim",
+                               "Religion - Atheist",
+                               "Intercept"
+                               ),
+          title = "Regression of Favorability on Profile Attributes",
+          dep.var.labels = "Favorability Rating (1-7)",
+          column.labels = c("Liberals", "Moderates","Conservatives"),
+          table.placement="H"
+)
+```
+
+```{r, echo=F}
+dwplot(
+          list(
+               "Liberals"= liberal_ratio_model_1,
+               "Moderates"= moderate_ratio_model_1,
+               "Conservatives" = conservative_ratio_model_1)
+       ) +
+    ggtitle("Coefficient Estimates For Republicans / Democrats") +
+    geom_vline(xintercept=0, linetype=2, alpha=.6) +
+    xlab("Coefficient Estimate") +
+    ylab("Variable") +
+    scale_y_discrete(
+                     labels=rev(c(
+                               "Democrat",
+                               "Republican",
+                               "Liberal",
+                               "Conservative",
                                "Race - Black",
                                "Race - Asian",
                                "Ethnicity - Hispanic",
