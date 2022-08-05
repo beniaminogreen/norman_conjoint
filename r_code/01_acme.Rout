@@ -1,0 +1,226 @@
+
+R version 4.2.1 (2022-06-23) -- "Funny-Looking Kid"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library(tidyverse)
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+> library(arrow)
+Some features are not enabled in this build of Arrow. Run `arrow_info()` for more information.
+
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+> 
+> data <- read_parquet("../data/cleaned_data.parquet")
+> 
+> data <- data %>%
++    mutate(dem = pid3==1)
+> male_data <- data %>%
++     filter(gender == 1)
+> female_data <- data %>%
++     filter(gender == 2)
+> dem_data <- data %>%
++     filter(pid3 == 1)
+> rep_data <- data %>%
++     filter(pid3 == 2)
+> indep_data <- data %>%
++     filter(pid3 == 3)
+> white_data <- data %>%
++     filter(race==1)
+> non_white_data <- data %>%
++     filter(race!=1)
+> 
+> conservative_data <- data %>%
++     filter(ideo5 %in% c(4,5))
+> liberal_data <- data %>%
++     filter(ideo5 %in% c(1,2))
+> moderate_data <- data %>%
++     filter(ideo5 == 3)
+> 
+> # Overall Sample Models
+> ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=data, weights=weight)
+> 
+> ratio_model_2 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=data, weights=weight)
+> 
+> 
+> acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=data, weights=weight)
+> acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=data, weights=weight)
+> acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=data, weights=weight)
+> 
+> ## Split sample estimates:
+> rep_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=rep_data, weights=weight)
+> rep_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=rep_data, weights=weight)
+> rep_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=rep_data, weights=weight)
+> rep_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=rep_data, weights=weight)
+> 
+> dem_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=dem_data, weights=weight)
+> dem_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=dem_data, weights=weight)
+> dem_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=dem_data, weights=weight)
+> dem_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=dem_data, weights=weight)
+> 
+> indep_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=indep_data, weights=weight)
+> indep_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=indep_data, weights=weight)
+> indep_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=indep_data, weights=weight)
+> indep_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=indep_data, weights=weight)
+> 
+> male_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=male_data, weights=weight)
+> male_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=male_data, weights=weight)
+> male_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=male_data, weights=weight)
+> male_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=male_data, weights=weight)
+> 
+> female_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=female_data, weights=weight)
+> female_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=female_data, weights=weight)
+> female_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=female_data, weights=weight)
+> female_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=female_data, weights=weight)
+> 
+> white_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=white_data, weights=weight)
+> white_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=white_data, weights=weight)
+> white_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=white_data, weights=weight)
+> white_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=white_data, weights=weight)
+> non_white_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=non_white_data, weights=weight)
+> non_white_acme_model_1 <- lm(Q2_1 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=non_white_data, weights=weight)
+> non_white_acme_model_2 <- lm(Q2_2 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=non_white_data, weights=weight)
+> non_white_acme_model_3 <- lm(Q2_3 ~ p_dem + p_rep + p_ideo + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=non_white_data, weights=weight)
+> 
+> liberal_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=liberal_data, weights=weight)
+> conservative_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=conservative_data, weights=weight)
+> moderate_ratio_model_1 <- lm(Q1 ~ p_dem + p_rep + p_liberal + p_conservative + p_black + p_asian + p_hispanic +
++               p_midwest + p_south + p_west + p_education + p_inc +
++               p_female + p_jewish + p_muslim + p_atheist
++           , data=moderate_data, weights=weight)
+> 
+> save(list=ls(pattern="model"),file = "../data/models.Rda")
+> 
+> proc.time()
+   user  system elapsed 
+  3.607   0.111   3.724 
