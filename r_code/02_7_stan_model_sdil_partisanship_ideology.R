@@ -39,7 +39,7 @@ stan_data_1 <- list(
                 id = data$ID,
                 j = ncol(X),
                 k = ncol(Z),
-                y = as.numeric(data$Q2_3),
+                y = as.numeric(data$Q2_3)
 )
 
 fit <- model$sample(data=stan_data_1,

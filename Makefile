@@ -6,7 +6,5 @@ lab_notebooks.pdf: ./data/cleaned_data.parquet ./data/models.Rda
 
 ./data/models.Rda: ./data/cleaned_data.parquet ./r_code/01_acme.R
 	cd r_code/; R CMD BATCH --vanilla 01_acme.R
-# ./stan_code/two_level_lm: ./stan_code/two_level_lm.stan ./r_code/test_stan_model.R
-# 	cd r_code/; R CMD BATCH --vanilla test_stan_model.R
 
 
