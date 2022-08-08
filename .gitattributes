@@ -11,3 +11,7 @@ data/stan_draws/ratio_scrambled_partisanship_ideology_supp.Rda filter=lfs diff=l
 data/stan_draws/test filter=lfs diff=lfs merge=lfs -text
 data/stan_draws/ratio_partisanship_draws.Rda filter=lfs diff=lfs merge=lfs -text
 data/stan_draws/ratio_ideology_draws.Rda filter=lfs diff=lfs merge=lfs -text
+data/stan_draws/friend_partisanship_ideology_draws.Rda filter=lfs diff=lfs merge=lfs -text
+data/stan_draws/friend_partisanship_ideology_supp.Rda filter=lfs diff=lfs merge=lfs -text
+data/stan_draws/neighbor_partisanship_ideology_draws.Rda filter=lfs diff=lfs merge=lfs -text
+data/stan_draws/sdil_partisanship_ideology_supp.Rda filter=lfs diff=lfs merge=lfs -text

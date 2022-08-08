@@ -1,0 +1,40 @@
+Some features are not enabled in this build of Arrow. Run `arrow_info()` for more information.
+
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Loading required package: Rcpp
+This is rstanarm version 2.21.3
+- See https://mc-stan.org/rstanarm/articles/priors for changes to default priors!
+- Default priors may change, so it's safest to specify priors, even if equivalent to the defaults.
+- For execution on a local, multicore CPU with excess RAM we recommend calling
+  options(mc.cores = parallel::detectCores())
+This is cmdstanr version 0.5.2
+- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr
+- CmdStan path: /home/beniamino/.cmdstan/cmdstan-2.30.0
+- CmdStan version: 2.30.0
+
+A newer version of CmdStan is available. See ?install_cmdstan() to install it.
+To disable this check set option or environment variable CMDSTANR_NO_VER_CHECK=TRUE.
+This is bayesplot version 1.9.0
+- Online documentation and vignettes at mc-stan.org/bayesplot
+- bayesplot theme set to bayesplot::theme_default()
+   * Does _not_ affect other ggplot2 plots
+   * See ?bayesplot_theme_set for details on theme setting
+This is loo version 2.5.1
+- Online documentation and vignettes at mc-stan.org/loo
+- As of v2.0.0 loo defaults to 1 core but we recommend using as many as possible. Use the 'cores' argument or set options(mc.cores = NUM_CORES) for an entire session. 
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Error in list(X = X, Z = Z, n = nrow(X), n_id = nrow(Z), id = data$ID,  : 
+  argument 9 is empty
+Execution halted
