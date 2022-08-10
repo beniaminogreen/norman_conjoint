@@ -91,6 +91,7 @@ To understand this, I first create a correlation plot showing correlations
 between answers to the three questions, which can be seen below:
 
 ```{r, echo=F}
+
 conjoint_outcomes <- data %>%
     select(starts_with("Q2"))
 
