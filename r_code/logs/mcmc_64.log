@@ -1,0 +1,55 @@
+Some features are not enabled in this build of Arrow. Run `arrow_info()` for more information.
+
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Loading required package: Rcpp
+This is rstanarm version 2.21.3
+- See https://mc-stan.org/rstanarm/articles/priors for changes to default priors!
+- Default priors may change, so it's safest to specify priors, even if equivalent to the defaults.
+- For execution on a local, multicore CPU with excess RAM we recommend calling
+  options(mc.cores = parallel::detectCores())
+This is cmdstanr version 0.5.2
+- CmdStanR documentation and vignettes: mc-stan.org/cmdstanr
+- CmdStan path: /home/beniamino/.cmdstan/cmdstan-2.30.0
+- CmdStan version: 2.30.0
+This is bayesplot version 1.9.0
+- Online documentation and vignettes at mc-stan.org/bayesplot
+- bayesplot theme set to bayesplot::theme_default()
+   * Does _not_ affect other ggplot2 plots
+   * See ?bayesplot_theme_set for details on theme setting
+This is loo version 2.5.1
+- Online documentation and vignettes at mc-stan.org/loo
+- As of v2.0.0 loo defaults to 1 core but we recommend using as many as possible. Use the 'cores' argument or set options(mc.cores = NUM_CORES) for an entire session. 
+── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+Running MCMC with 4 parallel chains...
+
+Chain 1 ./two_level_lm_non_centered: error while loading shared libraries: libtbb.so.2: cannot open shared object file: No such file or directory
+Chain 2 ./two_level_lm_non_centered: error while loading shared libraries: libtbb.so.2: cannot open shared object file: No such file or directory
+Chain 3 ./two_level_lm_non_centered: error while loading shared libraries: libtbb.so.2: cannot open shared object file: No such file or directory
+Chain 4 ./two_level_lm_non_centered: error while loading shared libraries: libtbb.so.2: cannot open shared object file: No such file or directory
+Warning: Chain 1 finished unexpectedly!
+
+Warning: Chain 2 finished unexpectedly!
+
+Warning: Chain 3 finished unexpectedly!
+
+Warning: Chain 4 finished unexpectedly!
+
+Warning: Use read_cmdstan_csv() to read the results of the failed chains.
+Warning messages:
+1: All chains finished unexpectedly! Use the $output(chain_id) method for more information.
+ 
+2: No chains finished successfully. Unable to retrieve the fit. 
+Error: No chains finished successfully. Unable to retrieve the draws.
+Execution halted
