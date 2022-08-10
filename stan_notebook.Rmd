@@ -59,5 +59,36 @@ draws <-readRDS("data/stan_draws/ratio_scrambled_partisanship_ideology_draws.Rda
 ben_stargazer(draws, X,Z)
 ```
 
+# ACME MODELS
+
+## Friend Model
+
+```{r, echo=F, results="asis"}
+load("data/stan_draws/ratio_partisanship_ideology_supp.Rda")
+colnames(X) <- c("Intercept", "Republian", "Democratic","Liberal", "Conservative","Black", "Hispanic", "Asian", "Midwest", "South", "West", "Education","Income", "Female" , "Jewish", "Muslim", "Atheist")
+colnames(Z) <- c("Intercept", "Standardized Age", "Gender", "Education", "Hispanic", "Midwest", "South","West", "Black","Asian", "Female", "Democratic", "Republican", "Other Party", "Liberal", "Conservative")
+
+draws <-readRDS("data/stan_draws/friend_partisanship_ideology_draws.Rda")
+ben_stargazer(draws, X,Z)
+
+```
+
+## Neighbor Model
+
+```{r}
+draws <-readRDS("data/stan_draws/neighbor_partisanship_ideology_draws.Rda")
+ben_stargazer(draws, X,Z)
+```
+
+
+## Son / Daughter in Law Model
+
+```{r}
+draws <-readRDS("data/stan_draws/sdil_partisanship_ideology_draws.Rda")
+ben_stargazer(draws, X,Z)
+```
+
+
+
 
 
