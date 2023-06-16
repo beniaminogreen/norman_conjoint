@@ -171,6 +171,7 @@ demographic_data <- full_ratio %>%
     ) %>%
     distinct_all() %>%
     mutate(
+           pid3 = as.numeric(pid3),
            d_dem = as.numeric(pid3==1),
            d_rep = as.numeric(pid3==2),
            d_party_other = as.numeric(pid3 %in% c(4,5)),

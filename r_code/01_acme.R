@@ -1,7 +1,9 @@
 library(tidyverse)
 library(arrow)
+library(haven)
 
-data <- read_parquet("../data/cleaned_data.parquet")
+data <- read_parquet("../data/cleaned_data.parquet") %>%
+    zap_labels()
 
 data <- data %>%
    mutate(dem = pid3==1)

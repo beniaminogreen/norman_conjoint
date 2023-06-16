@@ -142,12 +142,11 @@ rated less-favorably by respondents.
 ```{r, echo=F, results="asis"}
 
 stargazer(
-          ratio_model_2, header=F,
+          ratio_model_1, header=F,
           covariate.labels = c(
                                "Democrat",
                                "Republican",
-                               "Liberal",
-                               "Conservative",
+                               "Ideology",
                                "Race - Black",
                                "Race - Asian",
                                "Ethnicity - Hispanic",
@@ -173,18 +172,15 @@ plot, shown below. The plot contains no new information, but is easier to take
 in at-a-glance.
 
 ```{r, echo=F}
-
-dwplot(ratio_model_2) +
-    ggtitle("Coefficient Plots For Model 1") +
+dwplot(ratio_model_1) +
     geom_vline(xintercept=0, linetype=2, alpha=.6) +
-    xlab("Coefficient Estimate") +
+    xlab("Coefficient Estimate \n (Change in Likablility on 7-pt Scale)") +
     ylab("Variable") +
     scale_y_discrete(
                      labels=rev(c(
                                "Democrat",
                                "Republican",
-                               "Liberal",
-                               "Conservative",
+                               "Ideology",
                                "Race - Black",
                                "Race - Asian",
                                "Ethnicity - Hispanic",
@@ -198,7 +194,20 @@ dwplot(ratio_model_2) +
                                "Religion - Muslim",
                                "Religion - Atheist"
                               ))
-    )
+    ) +
+    theme_bw() +
+    scale_colour_grey(
+        start = .1,
+        end = .1,
+        # if start and end same value, use same colour for all models
+        name = "Model",
+        breaks = c(0, 1),
+        labels = c("Automatic", "Manual")
+    ) +
+    annotate("label",x=.15,y=15,label="N=10640")
+
+ggsave("figures/figure_1.png", width = 8, height =5)
+
 ```
 
 ## Analysis of Binary-Choice Data
@@ -257,13 +266,13 @@ slightly easier to read at-a-glance.
 ```{r, echo=F}
 
 dwplot(
-          list("Friend Model"= acme_model_1,
-               "Neighbor Model" = acme_model_2,
-               "S/DIL Model" = acme_model_3)
+          list("Friend"= acme_model_1,
+               "Neighbor" = acme_model_2,
+               "S/DIL" = acme_model_3)
        ) +
     ggtitle("Coefficient Plots For Model ACME models") +
     geom_vline(xintercept=0, linetype=2, alpha=.6) +
-    xlab("Coefficient Estimate") +
+    xlab("Average Marginal Component Effect Estimate") +
     ylab("Variable") +
     scale_y_discrete(
                      labels=rev(c(
@@ -284,7 +293,12 @@ dwplot(
                                "Religion - Atheist"
                               ))
     ) +
-    scale_x_continuous(limits=c(-.2,.2))
+    scale_x_continuous(limits=c(-.2,.2)) +
+    theme_bw() +
+    labs(color = "Outcome") +
+    annotate("label",x=.17,y=15,label="N=10640")
+
+ggsave("figures/figure_2.png", width = 8, height =5)
 
 ```
 
@@ -369,7 +383,7 @@ dwplot(
        ) +
     ggtitle("Coefficient Estimates For Republicans / Democrats") +
     geom_vline(xintercept=0, linetype=2, alpha=.6) +
-    xlab("Coefficient Estimate") +
+    xlab("Coefficient Estimate \n (Change in Likablility on 7-pt Scale)") +
     ylab("Variable") +
     scale_y_discrete(
                      labels=rev(c(
@@ -389,7 +403,13 @@ dwplot(
                                "Religion - Muslim",
                                "Religion - Atheist"
                               ))
-    )
+    ) +
+    labs(colour="Population")+
+    theme_bw() +
+    scale_x_continuous(limits = c(-1.25,.5)) +
+    annotate("label",x=-1,y=15,label="N=10640")
+
+ggsave("figures/figure_3.png", width = 8, height =5)
 ```
 
  # Results by Ideology
@@ -431,7 +451,7 @@ dwplot(
                "Moderates"= moderate_ratio_model_1,
                "Conservatives" = conservative_ratio_model_1)
        ) +
-    ggtitle("Coefficient Estimates For Republicans / Democrats") +
+    ggtitle("Coefficient Estimates By Ideological Group") +
     geom_vline(xintercept=0, linetype=2, alpha=.6) +
     xlab("Coefficient Estimate") +
     ylab("Variable") +
@@ -454,7 +474,13 @@ dwplot(
                                "Religion - Muslim",
                                "Religion - Atheist"
                               ))
-    )
+    ) +
+    labs(color = "Ideological Group") +
+    theme_bw() +
+    xlab("Coefficient Estimate \n (Change in Likablility on 7-pt Scale)") +
+    xlim(c(-1,1)) +
+    annotate("label",x=.6,y=16,label="N=10640")
+    ggsave("figures/figure_4.png", width = 8, height =5)
 ```
 
 ## Men VS Women
@@ -613,6 +639,35 @@ population weights.
 
 $$\beta_{i} = \gamma^T Z_j$$
 
+\begin{table}[H]
+\centering
+\caption{Example Conjoint Comparison}
+\begin{tabular}{|l|l|l|}
+\hline
+Attribute           & Individual A & Individual B    \\ \hline
+Party               & Democrat  & Republican   \\
+Ideology            & Moderate  & Conservative \\
+Race / Ethnicity    & White     & Black        \\
+Regional Background & North     & East         \\
+Education           & HS Grad   & Post-grad    \\
+Income              & Under 40K & 40-80K       \\
+Gender              & Male      & Male         \\
+Religion            & Jewish    & Atheist      \\ \hline
+\end{tabular}
+\end{table}
+
+### Question Unit 1:
+On a scale of 1 (lowest) to 7 (highest), how favorably do you view each of the individuals profiled?
+
+* Person A ______
+* Person B ______
+
+### Question Unit 2:
+Indicate which individual (A or B) you would prefer in each of the following scenarios:
+
+* Having as a friend
+* Having as a neighbor
+* Having as a son/daughter-in-law
 
 # References
 
